@@ -1,0 +1,21 @@
+import pandas as pd
+
+file_path = r'C:\Users\sjsur\OneDrive\Documents\temperature_data.csv'
+df = pd.read_csv(file_path)
+
+df['Date'] = pd.to_datetime(df['Date'])
+
+city_stats = df.groupby('City')['Temperature'].agg(
+    Mean_Temperature='mean',
+    Std_Deviation='std',
+    Max_Temperature='max',
+    Min_Temperature='min'
+)
+
+city_stats['Temperature_Range'] = city_stats['Max_Temperature'] - city_stats['Min_Temperature']
+city_highest_range = city_stats['Temperature_Range'].idxmax()
+city_most_consistent = city_stats['Std_Deviation'].idxmin()
+
+print(city_stats)
+print(f"\nCity with the highest temperature range: {city_highest_range} ({city_stats.loc[city_highest_range, 'Temperature_Range']:.2f}°C)")
+print(f"City with the most consistent temperature: {city_most_consistent} (Std Dev: {city_stats.loc[city_most_consistent, 'Std_Deviation']:.2f}°C)")
