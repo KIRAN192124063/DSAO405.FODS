@@ -1,0 +1,16 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+temp_df = pd.read_csv(r"C:\Users\sjsur\OneDrive\Documents\temperature_data.csv")
+temp_df['Date'] = pd.to_datetime(temp_df['Date'])
+temp_df['Month'] = temp_df['Date'].dt.to_period('M')
+monthly_avg_temp = temp_df.groupby('Month')['Temperature (Celsius)'].mean().reset_index()
+monthly_avg_temp['Month'] = monthly_avg_temp['Month'].dt.to_timestamp()
+plt.figure(figsize=(10, 5))
+plt.plot(temp_df['Date'], temp_df['Temperature (Celsius)'])
+plt.plot(monthly_avg_temp['Month'], monthly_avg_temp['Temperature (Celsius)'], color='red')
+plt.title('Temperature Trend Over Time')
+plt.xlabel('Date')
+plt.ylabel('Temperature (Celsius)')
+plt.grid(True)
+plt.tight_layout()
+plt.show()
