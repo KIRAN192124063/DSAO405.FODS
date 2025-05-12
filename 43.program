@@ -1,0 +1,6 @@
+import pandas as pd
+employee_df = pd.read_csv(r"C:\Users\sjsur\OneDrive\Documents\employee_data.csv")
+employee_df['Salary'] = pd.to_numeric(employee_df['Salary'].replace('[\$,]', '', regex=True), errors='coerce')
+employee_df = employee_df.dropna(subset=["Department"])
+employee_df['First Name'] = employee_df['Full Name'].str.split().str[0]
+print(employee_df.head())
