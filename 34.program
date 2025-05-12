@@ -1,0 +1,48 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, classification_report
+data = {
+    "age": [25, 40, 22, 35, 45, 19, 38, 30, 28, 50],
+    "gender": [1, 0, 1, 0, 0, 1, 0, 1, 1, 0],  # 1: Male, 0: Female
+    "blood_pressure": [120, 140, 110, 135, 145, 105, 130, 125, 115, 150],
+    "cholesterol": [200, 240, 180, 220, 260, 170, 210, 190, 185, 270],
+    "outcome": ["Good", "Bad", "Good", "Bad", "Bad", "Good", "Bad", "Good", "Good", "Bad"]
+}
+
+df = pd.DataFrame(data)
+
+df["outcome"] = df["outcome"].map({"Good": 1, "Bad": 0})
+X = df[["age", "gender", "blood_pressure", "cholesterol"]]
+y = df["outcome"]
+
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+
+X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
+
+knn = KNeighborsClassifier(n_neighbors=3)  # Adjust k value as needed
+knn.fit(X_train, y_train)
+
+y_pred = knn.predict(X_test)
+
+accuracy = accuracy_score(y_test, y_pred)
+precision = precision_score(y_test, y_pred)
+recall = recall_score(y_test, y_pred)
+f1 = f1_score(y_test, y_pred)
+
+print(f"Accuracy: {accuracy:.2f}")
+print(f"Precision: {precision:.2f}")
+print(f"Recall: {recall:.2f}")
+print(f"F1-score: {f1:.2f}")
+
+print("\nClassification Report:")
+print(classification_report(y_test, y_pred))
+
+sns.heatmap(pd.DataFrame({"Actual": y_test, "Predicted": y_pred}), annot=True, cmap="coolwarm", fmt="d")
+plt.title("Actual vs Predicted Treatment Outcomes")
+plt.show()
