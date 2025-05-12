@@ -1,0 +1,26 @@
+import numpy as np
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LogisticRegression
+data = {
+    "usage_minutes": [200, 450, 100, 600, 350],
+    "contract_duration": [12, 24, 6, 36, 18],
+    "churn": [0, 1, 0, 1, 0]  # 0 = Not churned, 1 = Churned
+}
+df = pd.DataFrame(data)
+X = df[["usage_minutes", "contract_duration"]]
+y = df["churn"]
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
+model = LogisticRegression()
+model.fit(X_train_scaled, y_train)
+usage_minutes = float(input("Enter the customer's usage minutes: "))
+contract_duration = int(input("Enter the contract duration (months): "))
+input_features = scaler.transform([[usage_minutes, contract_duration]])
+churn_probability = model.predict_proba(input_features)[0][1]
+churn_prediction = model.predict(input_features)[0]
+print(f"Churn Probability: {churn_probability:.2f}")
+print(f"Prediction: {'Customer is likely to churn' if churn_prediction == 1 else 'Customer is unlikely to churn'}")
