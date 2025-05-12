@@ -1,0 +1,44 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+from scipy.stats import pearsonr
+
+# Sample Data: Study time vs Exam scores
+data = {
+    "Study Time (hours)": [1, 2, 2.5, 3, 4, 5, 6, 7, 8, 9, 10],
+    "Exam Score": [50, 55, 60, 62, 65, 70, 75, 78, 85, 88, 90]
+}
+
+# Convert data into a DataFrame
+df = pd.DataFrame(data)
+
+# Calculate Pearson correlation coefficient
+correlation, _ = pearsonr(df["Study Time (hours)"], df["Exam Score"])
+print(f"Pearson Correlation Coefficient: {correlation:.2f}")
+
+# Scatter plot with regression line
+plt.figure(figsize=(8,5))
+sns.regplot(x=df["Study Time (hours)"], y=df["Exam Score"], line_kws={"color":"red"})
+plt.title("Study Time vs Exam Score")
+plt.xlabel("Study Time (hours)")
+plt.ylabel("Exam Score")
+plt.grid()
+plt.show()
+
+# Histogram of Study Time
+plt.figure(figsize=(8,5))
+sns.histplot(df["Study Time (hours)"], bins=8, kde=True)
+plt.title("Distribution of Study Time")
+plt.xlabel("Study Time (hours)")
+plt.ylabel("Frequency")
+plt.grid()
+plt.show()
+
+# Histogram of Exam Scores
+plt.figure(figsize=(8,5))
+sns.histplot(df["Exam Score"], bins=8, kde=True)
+plt.title("Distribution of Exam Scores")
+plt.xlabel("Exam Score")
+plt.ylabel("Frequency")
+plt.grid()
+plt.show()
