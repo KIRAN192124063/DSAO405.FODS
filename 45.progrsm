@@ -1,0 +1,11 @@
+import pandas as pd
+orders_df = pd.read_csv("order_data.csv")
+customers_df = pd.read_csv("customer_info.csv")
+merged_df = pd.merge(orders_df, customers_df, on="Customer ID", how="inner")
+print(merged_df)
+merged_df['Order Date'] = pd.to_datetime(merged_df['Order Date'])
+merged_df = merged_df.sort_values(by=['Customer ID', 'Order Date'])
+merged_df['Time Diff'] = merged_df.groupby('Customer ID')['Order Date'].diff()
+avg_time_diff = merged_df['Time Diff'].dropna().mean()
+print("\nAverage time between consecutive orders:")
+print(avg_time_diff)
