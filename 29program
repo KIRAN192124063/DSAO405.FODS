@@ -1,0 +1,35 @@
+from sklearn.datasets import load_iris, load_breast_cancer
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+import pandas as pd
+dataset = load_iris()
+data = pd.DataFrame(dataset.data, columns=dataset.feature_names)
+data['target'] = dataset.target
+print("\nAvailable features:")
+print(data.columns.tolist()[:-1])
+print("Target variable name: 'target'")
+print(f"Target classes: {dataset.target_names.tolist()}\n")
+features_input = input("Enter comma-separated feature names to use (e.g., sepal length (cm),petal length (cm)): ")
+features = [f.strip() for f in features_input.split(',')]
+for f in features:
+    if f not in data.columns:print(f"Error: Feature '{f}' is not valid.")
+    exit()
+X = data[features]
+y = data['target']
+if len(y.unique()) > 2:
+    print("Note: Converting to binary classification (class 0 vs others)")
+    y = (y == 0).astype(int)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+model = LogisticRegression()
+model.fit(X_train, y_train)
+y_pred = model.predict(X_test)
+acc = accuracy_score(y_test, y_pred)
+prec = precision_score(y_test, y_pred, zero_division=0)
+rec = recall_score(y_test, y_pred)
+f1 = f1_score(y_test, y_pred)
+print("\n📊 Evaluation Metrics:")
+print(f"Accuracy:  {acc:.4f}")
+print(f"Precision: {prec:.4f}")
+print(f"Recall:    {rec:.4f}")
+print(f"F1 Score:  {f1:.4f}")
