@@ -1,0 +1,26 @@
+import numpy as np
+import pandas as pd
+from sklearn.cluster import KMeans
+from sklearn.preprocessing import StandardScaler
+data = {
+    "spending_food": [500, 1200, 800, 2000, 1500],
+    "spending_clothing": [300, 700, 500, 1500, 1200],
+    "spending_electronics": [1000, 2500, 2000, 4000, 3500]
+}
+df = pd.DataFrame(data)
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(df)
+num_clusters = 3 
+kmeans = KMeans(n_clusters=num_clusters, random_state=42, n_init=10)
+kmeans.fit(X_scaled)
+# Get user input for new customer features
+spending_food = float(input("Enter the annual spending on food: "))
+spending_clothing = float(input("Enter the annual spending on clothing: "))
+spending_electronics = float(input("Enter the annual spending on electronics: "))
+
+input_features = scaler.transform([[spending_food, spending_clothing, spending_electronics]])
+
+# Predict the cluster for the new customer
+predicted_cluster = kmeans.predict(input_features)[0]
+
+print(f"The new customer belongs to segment {predicted_cluster}.")
